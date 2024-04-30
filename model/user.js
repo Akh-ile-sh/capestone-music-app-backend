@@ -19,11 +19,9 @@ const userSchema = new mongoose.Schema({
   },
   likedSongs: {
     type: Array,
-    required: true,
   },
   likedPlayLists: {
     type: Array,
-    required: true,
   },
 });
 

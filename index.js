@@ -7,7 +7,12 @@ const passport = require("passport");
 
 const connectDB = require("./db/connect");
 
+//routes
+const authRouter = require("./routes/authRoute");
+
 const port = process.env.PORT || 3001;
+
+app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("welcome to  my website");
@@ -31,6 +36,8 @@ passport.use(
     });
   })
 );
+
+app.use("/api/v1/auth", authRouter);
 
 const start = async () => {
   await connectDB(process.env.MONGO_URL);
