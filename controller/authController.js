@@ -19,7 +19,7 @@ const registerUser = async (req, res) => {
 
     const token = await getToken(email, createUser);
 
-    res.status(200).json({ ...createUser, token });
+    res.status(200).json({ createUser, token });
   } catch (error) {
     res.json(error.message);
   }
@@ -29,7 +29,7 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    res.status(403).json("enter all field!!");
+    res.status(301).json("enter all field!!");
   }
 
   const user = await User.findOne({ email });

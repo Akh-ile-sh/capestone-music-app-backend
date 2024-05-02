@@ -4,11 +4,13 @@ require("dotenv").config();
 const JwtStrategy = require("passport-jwt").Strategy,
   ExtractJwt = require("passport-jwt").ExtractJwt;
 const passport = require("passport");
+const User = require("./model/user");
 
 const connectDB = require("./db/connect");
 
 //routes
 const authRouter = require("./routes/authRoute");
+const songRouter = require("./routes/songRoute");
 
 const port = process.env.PORT || 3001;
 
@@ -23,21 +25,28 @@ opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 opts.secretOrKey = process.env.JWT_SECRET;
 passport.use(
   new JwtStrategy(opts, function (jwt_payload, done) {
-    User.findOne({ id: jwt_payload.sub }, function (err, user) {
-      if (err) {
-        return done(err, false);
-      }
-      if (user) {
-        return done(null, user);
-      } else {
-        return done(null, false);
-        // or you could create a new account
-      }
-    });
+    // User.findOne({ id: jwt_payload.sub }, function (err, user) {
+    //   if (err) {
+    //     return done(err, false);
+    //   }
+    //   if (user) {
+    //     return done(null, user);
+    //   } else {
+    //     return done(null, false);
+    //     // or you could create a new account
+    //   }
+    // });
+    const user = User.findOne({ id: jwt_payload.sub });
+    if (user) {
+      return done(null, user);
+    } else {
+      return done(null, false);
+    }
   })
 );
 
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/song", songRouter);
 
 const start = async () => {
   await connectDB(process.env.MONGO_URL);
